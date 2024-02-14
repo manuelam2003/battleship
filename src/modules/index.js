@@ -10,6 +10,7 @@ async function filterData() {
   const currentWeather = await getWeather();
   console.log(currentWeather);
   console.log(currentWeather.gust_kph);
+  console.log(currentWeather.gust_mph);
 }
 
 filterData();
