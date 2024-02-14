@@ -1,24 +1,28 @@
-import Gameboard from "../Gameboard";
-import Ship from "../Ship";
+import Gameboard from "../modules/Gameboard";
+import Ship from "../modules/Ship";
 
 describe("Gameboard", () => {
   let gameboard;
   let ship;
   let testObjectArray;
   let testBooleanArray;
+  let testShotsArray;
 
   beforeEach(() => {
     gameboard = new Gameboard();
     ship = new Ship(3);
     testObjectArray = [];
     testBooleanArray = [];
+    testShotsArray = [];
 
     for (let i = 0; i < 10; i++) {
       testObjectArray[i] = [];
       testBooleanArray[i] = [];
+      testShotsArray[i] = [];
       for (let j = 0; j < 10; j++) {
         testObjectArray[i][j] = null;
         testBooleanArray[i][j] = false;
+        testShotsArray[i][j] = false;
       }
     }
   });
@@ -27,6 +31,7 @@ describe("Gameboard", () => {
     expect(gameboard).toEqual({
       board: testObjectArray,
       missedShots: testBooleanArray,
+      shots: testShotsArray,
     });
   });
 
@@ -38,6 +43,7 @@ describe("Gameboard", () => {
     expect(gameboard).toEqual({
       board: testObjectArray,
       missedShots: testBooleanArray,
+      shots: testShotsArray,
     });
   });
 
@@ -53,7 +59,7 @@ describe("Gameboard", () => {
 
   test("prevents ship placement on taken fields", () => {
     gameboard.placeShip(ship, 1, 1, true);
-    expect(gameboard.isPlacementPossible(ship, 1, 1, true)).toBe(false);
+    expect(gameboard.isPlacementPossible(new Ship(4), 1, 1, true)).toBe(false);
     expect(gameboard.isPlacementPossible(ship, 2, 1, true)).toBe(false);
     expect(gameboard.isPlacementPossible(ship, 3, 1, true)).toBe(false);
   });

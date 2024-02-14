@@ -6,6 +6,7 @@ class Gameboard {
   constructor() {
     this.board = [];
     this.missedShots = [];
+    this.shots = [];
     this.initialize();
   }
 
@@ -13,15 +14,18 @@ class Gameboard {
     for (let i = 0; i < SIZE; i++) {
       this.board[i] = [];
       this.missedShots[i] = [];
+      this.shots[i] = [];
       for (let j = 0; j < SIZE; j++) {
         this.board[i][j] = null;
         this.missedShots[i][j] = false;
+        this.shots[i][j] = false;
       }
     }
   }
 
   placeShip(ship, row, column, isVertical) {
     if (!this.isPlacementPossible(ship, row, column, isVertical)) {
+      console.log("Cant place ship here");
       return false;
     }
 
@@ -34,7 +38,7 @@ class Gameboard {
         this.board[row][column + i] = ship;
       }
     }
-
+    // console.log(`Placed a ship ${ship} in row ${row} and col ${column}`);
     return true;
   }
 
@@ -60,7 +64,7 @@ class Gameboard {
     if (row < 0 || row >= SIZE || column < 0 || column >= SIZE) {
       return false;
     }
-
+    this.shots[row][column] = true;
     if (this.board[row][column]) {
       let hitIndex = 0;
       // is horizontal
