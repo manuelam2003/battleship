@@ -2,11 +2,13 @@
 import Gameboard from "./modules/Gameboard";
 import { clearBoards, createBoardElement, displayBoard } from "./modules/dom";
 import Ship from "./modules/Ship";
+import Player from "./modules/Player";
 
 let boardPlayer;
 let boardAi;
 let lens;
-let bot;
+let initialGame = true;
+const bot = new Player();
 function initializeDom() {
   const container = document.getElementById("boards");
   container.appendChild(createBoardElement("P"));
@@ -42,22 +44,22 @@ function checkAttackSuccess(e) {
   id.shift();
   const coords = id.map((i) => parseInt(i, 10));
 
-  if (boardAi.hit[coords[0]][coords[1]]) return;
+  if (boardAi.shots[coords[0]][coords[1]]) return;
 
   boardAi.receiveAttack(coords[0], coords[1]);
   displayBoard(boardAi, "A");
   if (boardAi.isGameOver()) {
     displayWinner("human");
   }
-
   allowBotAttack();
 }
 
+// revisar
 function allowBotAttack() {
   bot.randomAttack(boardPlayer);
   displayBoard(boardPlayer, "P");
   if (boardPlayer.isGameOver()) {
-    displayWinner("player");
+    displayWinner("AI");
   }
 }
 
@@ -91,11 +93,18 @@ function getPlayerMoves() {
 }
 
 function setup() {
-  initializeDom();
+  if (initialGame) {
+    initializeDom();
+    initialGame = false;
+  }
   boardPlayer = new Gameboard();
   boardAi = new Gameboard();
+  boardAi.placeShipsRandomly();
+  console.log(boardAi.board);
   lens = [2, 3, 3, 4, 5];
-
+  const content = document.querySelector("#content");
+  content.textContent = "place your 5 ships below";
+  // getBotMoves();
   getPlayerMoves();
 }
 
