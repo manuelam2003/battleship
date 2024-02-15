@@ -8,6 +8,7 @@ let boardPlayer;
 let boardAi;
 let lens;
 let initialGame = true;
+let orientationIsVertical = true;
 const bot = new Player();
 function initializeDom() {
   const container = document.getElementById("boards");
@@ -22,7 +23,12 @@ function addShip(e) {
   // TODO: orientacion de los barcos
   if (
     lens.length > 0 &&
-    boardPlayer.placeShip(new Ship(lens[0]), coords[0], coords[1], true)
+    boardPlayer.placeShip(
+      new Ship(lens[0]),
+      coords[0],
+      coords[1],
+      orientationIsVertical
+    )
   ) {
     if (lens.length === 1) allowPlayerAttack();
     displayBoard(boardPlayer, "P");
@@ -100,11 +106,22 @@ function setup() {
   boardPlayer = new Gameboard();
   boardAi = new Gameboard();
   boardAi.placeShipsRandomly();
+
   console.log(boardAi.board);
   lens = [2, 3, 3, 4, 5];
   const content = document.querySelector("#content");
   content.textContent = "place your 5 ships below";
-  // getBotMoves();
+
+  const button = document.querySelector("button");
+  button.addEventListener("click", () => {
+    if (orientationIsVertical) {
+      button.textContent = "Vertical";
+      orientationIsVertical = false;
+    } else {
+      button.textContent = "Horizontal";
+      orientationIsVertical = true;
+    }
+  });
   getPlayerMoves();
 }
 
