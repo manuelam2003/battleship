@@ -14,7 +14,7 @@ describe("Player", () => {
   });
 
   test("creates and initializes an object", () => {
-    expect(player).toEqual({ name: "p1", alreadyHit: [] });
+    expect(player).toEqual({ name: "p1", alreadyHit: [], lastHit: null });
   });
 
   test("attacks", () => {

@@ -20,7 +20,6 @@ function addShip(e) {
   const id = e.target.getAttribute("id").split("");
   id.shift();
   const coords = id.map((i) => parseInt(i, 10));
-  // TODO: orientacion de los barcos
   if (
     lens.length > 0 &&
     boardPlayer.placeShip(
@@ -60,7 +59,6 @@ function checkAttackSuccess(e) {
   allowBotAttack();
 }
 
-// revisar
 function allowBotAttack() {
   bot.randomAttack(boardPlayer);
   displayBoard(boardPlayer, "P");
