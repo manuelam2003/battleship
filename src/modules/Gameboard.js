@@ -1,6 +1,8 @@
 import Ship from "./Ship";
 
 const SIZE = 10;
+const NUM_SHIPS = 5;
+const SHIP_LENGTHS = [5, 4, 3, 3, 2];
 
 class Gameboard {
   constructor() {
@@ -12,14 +14,9 @@ class Gameboard {
 
   initialize() {
     for (let i = 0; i < SIZE; i++) {
-      this.board[i] = [];
-      this.missedShots[i] = [];
-      this.shots[i] = [];
-      for (let j = 0; j < SIZE; j++) {
-        this.board[i][j] = null;
-        this.missedShots[i][j] = false;
-        this.shots[i][j] = false;
-      }
+      this.board[i] = Array(SIZE).fill(null);
+      this.missedShots[i] = Array(SIZE).fill(false);
+      this.shots[i] = Array(SIZE).fill(false);
     }
   }
 
@@ -38,18 +35,16 @@ class Gameboard {
         this.board[row][column + i] = ship;
       }
     }
-    // console.log(`Placed a ship ${ship} in row ${row} and col ${column}`);
     return true;
   }
 
   placeShipsRandomly() {
     if (!this.isEmpty()) return;
 
-    const ships = [];
-    ships.push(new Ship(5), new Ship(4), new Ship(3), new Ship(3), new Ship(2));
+    const ships = SHIP_LENGTHS.map((length) => new Ship(length));
 
     let succesfulPlacements = 0;
-    while (succesfulPlacements < 5) {
+    while (succesfulPlacements < NUM_SHIPS) {
       const row = Math.floor(Math.random() * SIZE);
       const column = Math.floor(Math.random() * SIZE);
       const isVertical = Math.random() < 0.5;
@@ -61,7 +56,7 @@ class Gameboard {
   }
 
   receiveAttack(row, column) {
-    if (row < 0 || row >= SIZE || column < 0 || column >= SIZE) {
+    if (!this.isValidPosition(row, column)) {
       return false;
     }
     this.shots[row][column] = true;
@@ -92,7 +87,7 @@ class Gameboard {
 
   isPlacementPossible(ship, row, column, isVertical) {
     // position out of gameboard
-    if (row < 0 || row >= SIZE || column < 0 || column >= SIZE) {
+    if (!this.isValidPosition(row, column)) {
       return false;
     }
     if (isVertical) {
@@ -108,12 +103,7 @@ class Gameboard {
       for (let i = 0; i < ship.length; i++) {
         for (let x = -1; x <= 1; x++) {
           for (let y = -1; y <= 1; y++) {
-            if (
-              row + x + i < 0 ||
-              row + x + i >= SIZE ||
-              column + y < 0 ||
-              column + y >= SIZE
-            ) {
+            if (!this.isValidPosition(row + x + i, column + y)) {
               continue;
             }
             if (this.board[row + x + i][column + y]) return false;
@@ -130,13 +120,7 @@ class Gameboard {
       for (let i = 0; i < ship.length; i++) {
         for (let x = -1; x <= 1; x++) {
           for (let y = -1; y <= 1; y++) {
-            if (
-              row + x < 0 ||
-              row + x >= SIZE ||
-              column + y + i < 0 ||
-              column + y + i >= SIZE
-            )
-              continue;
+            if (!this.isValidPosition(row + x, column + y + i)) continue;
             if (this.board[row + x][column + y + i]) return false;
           }
         }
@@ -177,6 +161,10 @@ class Gameboard {
       }
     }
     return result;
+  }
+
+  isValidPosition(row, column) {
+    return row >= 0 && row < SIZE && column >= 0 && column < SIZE;
   }
 }
 

@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 class Player {
   constructor(name) {
     this.name = name;
