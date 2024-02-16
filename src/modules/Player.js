@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 class Player {
   constructor(name) {
     this.name = name;
@@ -18,21 +19,15 @@ class Player {
     let probableSpots = [];
     if (this.lastHit) {
       probableSpots = this.attacksAroundPoint(this.lastHit[0], this.lastHit[1]);
-      const [curPosX, curPosY] = probableSpots.shift();
-      posX = curPosX;
-      posY = curPosY;
+      [posX, posY] = probableSpots.shift();
     } else {
-      posX = Math.floor(Math.random() * 10);
-      posY = Math.floor(Math.random() * 10);
+      [posX, posY] = this.generateRandomPosition();
     }
     while (this.hasAlreadyHit(posX, posY)) {
       if (probableSpots.length > 0) {
-        const [curPosX, curPosY] = probableSpots.shift();
-        posX = curPosX;
-        posY = curPosY;
+        [posX, posY] = probableSpots.shift();
       } else {
-        posX = Math.floor(Math.random() * 10);
-        posY = Math.floor(Math.random() * 10);
+        [posX, posY] = this.generateRandomPosition();
       }
     }
     if (this.attack(posX, posY, gameboard)) {
@@ -40,7 +35,7 @@ class Player {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  // update so it keeps looking in the found ship direction and not all the squares around it
   attacksAroundPoint(posX, posY) {
     const arrayOfPos = [
       [posX, posY - 1],
@@ -60,17 +55,17 @@ class Player {
     if (posY === 9) {
       arrayOfPos.splice(1, 1);
     }
-    console.log(arrayOfPos);
     return arrayOfPos;
   }
 
   hasAlreadyHit(posX, posY) {
-    for (let i = 0; i < this.alreadyHit.length; i++) {
-      if (this.alreadyHit[i][0] === posX && this.alreadyHit[i][1] === posY) {
-        return true;
-      }
-    }
-    return false;
+    return this.alreadyHit.some(([x, y]) => x === posX && y === posY);
+  }
+
+  generateRandomPosition() {
+    const posX = Math.floor(Math.random() * 10);
+    const posY = Math.floor(Math.random() * 10);
+    return [posX, posY];
   }
 }
 
