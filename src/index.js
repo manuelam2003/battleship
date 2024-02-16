@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import Gameboard from "./modules/Gameboard";
-import { clearBoards, createBoardElement, displayBoard } from "./modules/dom";
+import { clearBoards, createBoardElement, displayBoard } from "./modules/Dom";
 import Ship from "./modules/Ship";
 import Player from "./modules/Player";
 
@@ -10,6 +10,7 @@ let lens;
 let initialGame = true;
 let orientationIsVertical = true;
 const bot = new Player();
+
 function initializeDom() {
   const container = document.getElementById("boards");
   container.appendChild(createBoardElement("P"));
